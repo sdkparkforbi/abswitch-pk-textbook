@@ -1,7 +1,11 @@
 # 약이 몸속에서 헤엄친다 🧪 — 분포용적(V<sub>d</sub>) 쉽게 배우기
 
+![교재 썸네일](thumbnail.png)
+
 초등학생도 이해할 수 있는 **임상약동학 입문 인터랙티브 교재**입니다.
 ABSwitch 프로젝트 학생들을 위해 만들었습니다.
+
+**🔗 바로 보기: https://sdkparkforbi.github.io/abswitch-pk-textbook/**
 
 ## 📖 구성
 
