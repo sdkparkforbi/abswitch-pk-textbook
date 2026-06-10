@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>약이 몸속에서 헤엄친다 — 분포용적(Vd) 쉽게 배우기</title>
+<style>
+  :root{
+    --bg:#f4f8ff; --card:#ffffff; --ink:#1f2a44; --muted:#5b6b8c;
+    --brand:#3f7cff; --brand2:#15c39a; --accent:#ff7a59; --warn:#ffb020;
+    --vc:#7e57c2; --vss:#ef6c9c; --vz:#15c39a;
+    --line:#e3ebfa; --shadow:0 8px 24px rgba(40,70,140,.10);
+    --r:18px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+    background:linear-gradient(180deg,#eaf2ff,#f4f8ff 30%);color:var(--ink);line-height:1.7}
+  a{color:var(--brand)}
+  .wrap{max-width:880px;margin:0 auto;padding:0 18px 90px}
+  header.hero{text-align:center;padding:46px 18px 26px}
+  header.hero h1{font-size:clamp(26px,5vw,40px);margin:.2em 0;letter-spacing:-.5px}
+  header.hero p{color:var(--muted);font-size:18px;margin:.2em 0}
+  .pill{display:inline-block;background:#e7f0ff;color:var(--brand);font-weight:700;
+    padding:6px 14px;border-radius:999px;font-size:14px;margin-bottom:10px}
+  /* tabs */
+  nav.tabs{position:sticky;top:0;z-index:20;display:flex;gap:8px;justify-content:center;
+    background:rgba(244,248,255,.92);backdrop-filter:blur(8px);padding:12px;margin:0 -18px 24px;
+    border-bottom:1px solid var(--line);flex-wrap:wrap}
+  nav.tabs button{border:0;cursor:pointer;font-weight:800;font-size:15px;color:var(--muted);
+    background:#fff;border:1px solid var(--line);padding:10px 18px;border-radius:999px;transition:.15s}
+  nav.tabs button:hover{transform:translateY(-1px)}
+  nav.tabs button.active{background:var(--brand);color:#fff;border-color:var(--brand);box-shadow:var(--shadow)}
+  .tab{display:none;animation:fade .35s}
+  .tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  /* cards */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+    padding:24px 22px;margin:18px 0;box-shadow:var(--shadow)}
+  h2.sec{font-size:24px;margin:34px 4px 6px;display:flex;align-items:center;gap:10px}
+  h2.sec .n{background:var(--brand);color:#fff;width:34px;height:34px;border-radius:10px;
+    display:grid;place-items:center;font-size:17px;flex:0 0 auto}
+  h3{font-size:19px;margin:18px 0 8px}
+  p{margin:10px 0}
+  .lead{font-size:18px}
+  .big{font-size:21px;font-weight:800;color:var(--brand)}
+  .hl{background:linear-gradient(transparent 55%,#fff1a8 55%);font-weight:700;padding:0 2px}
+  .formula{background:#0f1b3d;color:#eaf0ff;border-radius:14px;padding:16px 18px;text-align:center;
+    font-size:clamp(17px,4vw,22px);font-weight:700;margin:14px 0;letter-spacing:.3px}
+  .formula b{color:#8fd6ff}
+  /* dialogue */
+  .talk{display:flex;gap:12px;margin:14px 0;align-items:flex-start}
+  .talk.right{flex-direction:row-reverse}
+  .ava{width:54px;height:54px;flex:0 0 auto}
+  .bub{background:#eef4ff;border-radius:16px;padding:12px 15px;max-width:78%;position:relative}
+  .talk.right .bub{background:#e6fbf4}
+  .bub .who{font-weight:800;font-size:13px;color:var(--muted);margin-bottom:2px}
+  .talk.right .bub .who{color:#0c9a78}
+  /* callouts */
+  .note{border-left:5px solid var(--brand);background:#eef4ff;border-radius:0 12px 12px 0;padding:12px 16px;margin:14px 0}
+  .tip{border-left-color:var(--brand2);background:#e6fbf4}
+  .warnbox{border-left-color:var(--warn);background:#fff7e6}
+  .key{border:2px dashed var(--brand);border-radius:14px;padding:14px 16px;background:#f7faff;margin:16px 0}
+  .key b{color:var(--brand)}
+  /* table */
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:15px;overflow:hidden;border-radius:12px}
+  th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left}
+  th{background:#eef4ff;font-size:14px}
+  tr:last-child td{border-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:800;color:#fff}
+  .t-vc{background:var(--vc)} .t-vss{background:var(--vss)} .t-vz{background:var(--vz)}
+  /* calculator + quiz */
+  .calc label{display:block;font-weight:700;font-size:14px;margin:10px 0 4px;color:var(--muted)}
+  .calc input,.calc select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;font-size:16px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .btn{background:var(--brand);color:#fff;border:0;border-radius:12px;padding:12px 18px;font-weight:800;
+    font-size:15px;cursor:pointer;margin-top:14px;transition:.15s}
+  .btn:hover{filter:brightness(1.05);transform:translateY(-1px)}
+  .btn.ghost{background:#fff;color:var(--brand);border:1px solid var(--brand)}
+  .out{margin-top:14px;font-size:17px;font-weight:700;min-height:1.4em}
+  .quiz{margin:8px 0 4px}
+  .quiz .q{font-weight:800;margin:16px 0 8px}
+  .opt{display:block;border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin:7px 0;cursor:pointer;transition:.12s}
+  .opt:hover{border-color:var(--brand);background:#f5f9ff}
+  .opt.correct{border-color:var(--brand2);background:#e6fbf4}
+  .opt.wrong{border-color:var(--accent);background:#ffeee9}
+  .opt input{margin-right:8px}
+  .fb{font-size:14px;margin:4px 0 0;color:var(--muted);display:none}
+  .opt.show .fb,.fb.show{display:block}
+  .score{font-size:20px;font-weight:800;text-align:center;margin-top:12px;color:var(--brand)}
+  /* decision */
+  .scenario{border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0;background:#fbfdff}
+  .choices button{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;
+    border-radius:12px;padding:12px 14px;margin:8px 0;cursor:pointer;font-size:15px;font-weight:600;transition:.12s}
+  .choices button:hover{border-color:var(--brand);background:#f5f9ff}
+  .verdict{margin-top:12px;padding:12px 14px;border-radius:12px;display:none;font-size:15px}
+  .verdict.good{background:#e6fbf4;border-left:5px solid var(--brand2);display:block}
+  .verdict.meh{background:#fff7e6;border-left:5px solid var(--warn);display:block}
+  .verdict.bad{background:#ffeee9;border-left:5px solid var(--accent);display:block}
+  figure{margin:18px 0;text-align:center}
+  figcaption{font-size:14px;color:var(--muted);margin-top:6px}
+  .footer{text-align:center;color:var(--muted);font-size:13px;margin-top:40px}
+  ul.clean{padding-left:20px} ul.clean li{margin:6px 0}
+  .emoji{font-size:1.15em}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="pill">🧪 임상약동학 첫걸음 · 초등학생도 OK</div>
+  <h1>약이 몸속에서 헤엄친다</h1>
+  <p>분포용적(V<sub>d</sub>)을 가장 쉽게 배우는 인터랙티브 교재</p>
+  <p style="font-size:14px">교재 → 문제 → 실제문제 순서로, <b>스스로 결정하는 힘</b>을 기릅니다</p>
+</header>
+
+<div class="wrap">
+<nav class="tabs">
+  <button class="active" data-tab="t1">📖 1부 · 교재</button>
+  <button data-tab="t2">✏️ 2부 · 문제</button>
+  <button data-tab="t3">🔬 3부 · 실제문제</button>
+</nav>
+
+<!-- ============ 등장인물 SVG defs ============ -->
+<svg width="0" height="0" style="position:absolute"><defs>
+  <g id="nari">
+    <circle cx="27" cy="27" r="26" fill="#ffe3ec"/>
+    <circle cx="27" cy="24" r="13" fill="#ffd9a8"/>
+    <path d="M14 22a13 13 0 0126 0c0-9-6-14-13-14S14 13 14 22z" fill="#5b3a29"/>
+    <circle cx="22" cy="24" r="2" fill="#3a2a1a"/><circle cx="32" cy="24" r="2" fill="#3a2a1a"/>
+    <path d="M23 30q4 3 8 0" stroke="#c0392b" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M11 50a16 16 0 0132 0z" fill="#ff85a2"/>
+  </g>
+  <g id="drd">
+    <circle cx="27" cy="27" r="26" fill="#dff3ff"/>
+    <circle cx="27" cy="25" r="13" fill="#ffd9a8"/>
+    <path d="M14 24q0-13 13-13t13 13z" fill="#cfd8e3"/>
+    <rect x="18" y="23" width="8" height="6" rx="3" fill="none" stroke="#2b3a55" stroke-width="2"/>
+    <rect x="28" y="23" width="8" height="6" rx="3" fill="none" stroke="#2b3a55" stroke-width="2"/>
+    <path d="M26 26h2" stroke="#2b3a55" stroke-width="2"/>
+    <path d="M24 32q3 2 6 0" stroke="#7a5230" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M11 50a16 16 0 0132 0z" fill="#5aa9e6"/>
+  </g>
+</defs></svg>
+
+<!-- ================= TAB 1 : 교재 ================= -->
+<section class="tab active" id="t1">
+
+  <div class="card">
+    <div class="talk">
+      <svg class="ava" viewBox="0 0 54 54"><use href="#nari"/></svg>
+      <div class="bub"><div class="who">나리 (호기심 많은 학생)</div>
+      닥터 디! 약을 먹으면 그 약이 몸 안에서 어디로 가요? 사라지는 거예요?</div>
+    </div>
+    <div class="talk right">
+      <svg class="ava" viewBox="0 0 54 54"><use href="#drd"/></svg>
+      <div class="bub"><div class="who">닥터 디 (약을 연구하는 과학자)</div>
+      좋은 질문! 약은 사라지는 게 아니라 몸속에서 <b>헤엄쳐 퍼진단다</b>. 오늘은 그 "퍼진 정도"를 숫자로 재는 법을 배워보자. 이름은 <b>분포용적(V<sub>d</sub>)</b>!</div>
+    </div>
+  </div>
+
+  <!-- 1장 -->
+  <h2 class="sec"><span class="n">1</span> 설탕물로 시작하기</h2>
+  <div class="card">
+    <p class="lead">컵에 물을 붓고 <b>설탕 한 스푼</b>을 녹였다고 해볼까요. 물을 한 모금 떠서 맛(=농도)을 보면, 거꾸로 <span class="hl">"물이 몇 컵이었는지"</span>를 알아맞힐 수 있어요.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 220" width="100%" style="max-width:560px">
+        <!-- 진한 컵 -->
+        <text x="105" y="24" text-anchor="middle" font-size="14" fill="#5b6b8c" font-weight="700">작은 컵 (물 적음)</text>
+        <path d="M55 40 h100 l-12 130 h-76 z" fill="#cfe3ff" stroke="#3f7cff" stroke-width="2"/>
+        <path d="M62 110 h86 l-6 60 h-74 z" fill="#7aa9ff"/>
+        <text x="105" y="150" text-anchor="middle" font-size="13" fill="#0f1b3d" font-weight="800">진한 맛 🍬🍬</text>
+        <text x="105" y="200" text-anchor="middle" font-size="13" fill="#3f7cff" font-weight="800">→ 농도 높음</text>
+        <!-- 연한 컵 -->
+        <text x="420" y="24" text-anchor="middle" font-size="14" fill="#5b6b8c" font-weight="700">큰 컵 (물 많음)</text>
+        <path d="M330 40 h180 l-20 130 h-140 z" fill="#eaf3ff" stroke="#3f7cff" stroke-width="2"/>
+        <path d="M340 95 h160 l-12 75 h-136 z" fill="#bcd6ff"/>
+        <text x="420" y="140" text-anchor="middle" font-size="13" fill="#0f1b3d" font-weight="800">연한 맛 🍬</text>
+        <text x="420" y="200" text-anchor="middle" font-size="13" fill="#3f7cff" font-weight="800">→ 농도 낮음</text>
+      </svg>
+      <figcaption>설탕(약)의 양이 같아도, 물(몸)이 많으면 맛(농도)은 옅어집니다.</figcaption>
+    </figure>
+
+    <div class="note tip"><b>핵심 한 줄.</b> 농도가 옅을수록 → 약이 넓게 퍼진 것 → V<sub>d</sub>가 큼!</div>
+  </div>
+
+  <!-- 2장 -->
+  <h2 class="sec"><span class="n">2</span> V<sub>d</sub>의 마법 공식</h2>
+  <div class="card">
+    <p>분포용적은 딱 나눗셈 하나예요. 어렵지 않죠?</p>
+    <div class="formula">V<sub>d</sub> = <b>넣은 약의 양</b> ÷ <b>혈액에서 잰 농도</b></div>
+
+    <div class="talk">
+      <svg class="ava" viewBox="0 0 54 54"><use href="#nari"/></svg>
+      <div class="bub"><div class="who">나리</div>잠깐만요, 그럼 V<sub>d</sub>가 진짜 우리 몸 부피예요?</div>
+    </div>
+    <div class="talk right">
+      <svg class="ava" viewBox="0 0 54 54"><use href="#drd"/></svg>
+      <div class="bub"><div class="who">닥터 디</div>아니야! 그게 제일 중요한 비밀이야. V<sub>d</sub>는 <b>가짜(가상의) 부피</b>란다. 어떤 약은 V<sub>d</sub>가 수백 리터로 나와 — 사람 몸이 그렇게 클 리 없잖아? 그냥 "농도로 보니 <i>마치</i> 이만한 물통에 퍼진 것 같다"는 <span class="hl">상상 속 숫자</span>야.</div>
+    </div>
+
+    <div class="key"><b>직접 계산해보기 🧮</b><br>약 100 mg을 넣었더니 혈액 농도가 5 mg/L였어요. 아래 계산기에 넣어볼까요?</div>
+
+    <div class="calc">
+      <div class="row2">
+        <div><label>넣은 약의 양 (mg)</label><input id="dose" type="number" value="100"></div>
+        <div><label>혈액 농도 (mg/L)</label><input id="conc" type="number" value="5"></div>
+      </div>
+      <button class="btn" onclick="calcVd()">V<sub>d</sub> 계산하기</button>
+      <div class="out" id="vdout"></div>
+    </div>
+    <p class="fb show" style="color:var(--muted)">💡 숫자를 바꿔보세요. 농도를 <b>작게</b> 할수록 V<sub>d</sub>가 <b>커지는</b> 걸 직접 확인할 수 있어요.</p>
+  </div>
+
+  <!-- 3장 -->
+  <h2 class="sec"><span class="n">3</span> 왜 V<sub>d</sub>가 한 개가 아닐까?</h2>
+  <div class="card">
+    <p class="lead">설탕은 물에 넣으면 <b>금방</b> 골고루 퍼져요. 그런데 약은 달라요. <span class="hl">천천히</span> 퍼진답니다.</p>
+    <p>약은 먼저 <b>혈액</b>에 들어간 뒤, 시간이 지나면서 <b>지방·근육</b> 같은 조직으로 스며들어요. 그래서 <b>"언제" 농도를 재느냐</b>에 따라 V<sub>d</sub>가 달라져요. 바로 그래서 이름이 여러 개 생긴 거예요!</p>
+
+    <figure>
+      <svg viewBox="0 0 640 180" width="100%" style="max-width:600px">
+        <line x1="40" y1="120" x2="600" y2="120" stroke="#c9d6ee" stroke-width="2"/>
+        <text x="40" y="150" font-size="12" fill="#5b6b8c">주사 직후</text>
+        <text x="320" y="150" font-size="12" fill="#5b6b8c" text-anchor="middle">조금 지나서</text>
+        <text x="600" y="150" font-size="12" fill="#5b6b8c" text-anchor="end">다 퍼진 뒤</text>
+        <!-- person bodies showing spread -->
+        <g>
+          <circle cx="90" cy="80" r="30" fill="#f0f4fb" stroke="#c9d6ee"/>
+          <circle cx="90" cy="80" r="9" fill="#7e57c2"/>
+          <text x="90" y="40" font-size="13" text-anchor="middle" font-weight="800" fill="#7e57c2">Vc</text>
+        </g>
+        <g>
+          <circle cx="320" cy="80" r="30" fill="#f0f4fb" stroke="#c9d6ee"/>
+          <circle cx="320" cy="80" r="18" fill="#ef6c9c" opacity=".75"/>
+          <text x="320" y="40" font-size="13" text-anchor="middle" font-weight="800" fill="#ef6c9c">Vss</text>
+        </g>
+        <g>
+          <circle cx="555" cy="80" r="30" fill="#f0f4fb" stroke="#c9d6ee"/>
+          <circle cx="555" cy="80" r="27" fill="#15c39a" opacity=".7"/>
+          <text x="555" y="40" font-size="13" text-anchor="middle" font-weight="800" fill="#15c39a">Vz</text>
+        </g>
+        <text x="320" y="172" font-size="12" fill="#3f7cff" text-anchor="middle" font-weight="700">시간이 흐를수록 약은 더 넓게 퍼져요 → 부피 숫자가 커집니다</text>
+      </svg>
+      <figcaption>같은 약인데도 재는 순간에 따라 색칠된(퍼진) 넓이가 달라집니다.</figcaption>
+    </figure>
+  </div>
+
+  <!-- 4장 -->
+  <h2 class="sec"><span class="n">4</span> 세 친구를 소개합니다</h2>
+  <div class="card">
+    <p>트라조돈이라는 약을 예로, 같은 사람 한 명에서도 숫자가 이렇게 달라요 👇</p>
+    <table>
+      <tr><th>이름</th><th>언제 재나요?</th><th>크기</th><th>트라조돈 예시</th></tr>
+      <tr><td><span class="tag t-vc">Vc</span> 중심구획</td><td>주사 <b>직후</b> (혈액에만 있을 때)</td><td>가장 작음</td><td>24 L</td></tr>
+      <tr><td><span class="tag t-vss">Vss</span> 정상상태</td><td>들어가고 나가는 게 <b>딱 맞는</b> 한 순간</td><td>중간</td><td>84 L</td></tr>
+      <tr><td><span class="tag t-vz">Vz</span> 면적법<br>(=V<sub>d</sub>(area))</td><td>다 퍼진 뒤 <b>계속</b></td><td>가장 큼</td><td>91 L</td></tr>
+    </table>
+
+    <div class="talk">
+      <svg class="ava" viewBox="0 0 54 54"><use href="#nari"/></svg>
+      <div class="bub"><div class="who">나리</div>우와, 24랑 91은 거의 4배 차이잖아요! 그럼 Vc도 "퍼진 정도"인가요?</div>
+    </div>
+    <div class="talk right">
+      <svg class="ava" viewBox="0 0 54 54"><use href="#drd"/></svg>
+      <div class="bub"><div class="who">닥터 디</div>날카롭다! <b>Vc는 사실 분포가 아니야.</b> 약이 아직 안 퍼지고 혈액에만 있는 <i>출발점</i>일 뿐이거든. 그러니 "얼마나 퍼졌나"를 알고 싶으면 Vc는 빼야 해.</div>
+    </div>
+    <div class="note warnbox"><b>주의!</b> Vc(중심구획)는 "초기 희석 공간"이라 분포용적 친구처럼 보여도 <b>성격이 다른 친구</b>예요.</div>
+  </div>
+
+  <!-- 5장 -->
+  <h2 class="sec"><span class="n">5</span> 누구를 믿어야 할까? — 정답은 V<sub>z</sub></h2>
+  <div class="card">
+    <p>진짜 과학자들(그린블랫 교수님과 동료들, 2026년 논문)이 약 <b>1300개</b>를 조사해서 내린 결론이에요. <b>"V<sub>z</sub>(=V<sub>d</sub>(area))를 쓰자!"</b></p>
+    <ul class="clean">
+      <li>🎯 <b>실제로 잰 데이터만으로</b> 나와요. (Vss는 "약이 어디로 빠지나" 추측이 필요해요)</li>
+      <li>🔒 <b>답이 하나로 정해져요.</b> (Vss는 가정에 따라 값이 흔들려요)</li>
+      <li>⏰ <b>다 퍼진 뒤 언제 봐도 맞아요.</b> (Vss는 딱 한 순간만 맞아요)</li>
+    </ul>
+    <div class="key">📊 그 논문의 유명한 발견: 1300개 약에서 평균적으로 <br><b>Vss ÷ Vz ≈ 0.71</b><br> 즉, Vss는 실제 분포를 약 <b>29%나 작게</b> 보는 셈이었어요.</div>
+
+    <div class="talk">
+      <svg class="ava" viewBox="0 0 54 54"><use href="#nari"/></svg>
+      <div class="bub"><div class="who">나리</div>그럼 우리는 무조건 Vz만 모으면 되겠네요!</div>
+    </div>
+    <div class="talk right">
+      <svg class="ava" viewBox="0 0 54 54"><use href="#drd"/></svg>
+      <div class="bub"><div class="who">닥터 디</div>이론은 그래. 그런데… 현실에서는 데이터에 Vz가 별로 없을 수도 있어. 그게 바로 <b>3부 "실제문제"</b>에서 너희가 직접 결정해야 할 진짜 고민이란다. 먼저 2부에서 연습부터 하자! 💪</div>
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center;background:linear-gradient(135deg,#eef4ff,#e6fbf4)">
+    <p class="big">🌟 1부 요약 🌟</p>
+    <p>V<sub>d</sub> = 약의 양 ÷ 농도 (가상의 부피) · 약은 천천히 퍼져서 <b>Vc &lt; Vss &lt; Vz</b> · Vc는 분포가 아님 · <b>정답은 V<sub>z</sub></b></p>
+    <button class="btn" onclick="go('t2')">✏️ 2부 문제 풀러 가기</button>
+  </div>
+</section>
+
+<!-- ================= TAB 2 : 문제 ================= -->
+<section class="tab" id="t2">
+  <h2 class="sec"><span class="n">A</span> 개념 퀴즈</h2>
+  <div class="card">
+    <p>보기를 골라보세요. 누르면 바로 정답과 설명이 나와요!</p>
+    <div class="quiz" id="quiz"></div>
+    <button class="btn ghost" onclick="grade()">내 점수 보기</button>
+    <div class="score" id="score"></div>
+  </div>
+
+  <h2 class="sec"><span class="n">B</span> 계산 연습</h2>
+  <div class="card">
+    <p>공식 <b>V<sub>d</sub> = 양 ÷ 농도</b>를 직접 써볼까요. 값을 넣고 정답을 맞춰보세요.</p>
+    <div class="calc">
+      <div class="row2">
+        <div><label>넣은 약 (mg)</label><input id="d2dose" type="number" value="200"></div>
+        <div><label>농도 (mg/L)</label><input id="d2conc" type="number" value="4"></div>
+      </div>
+      <label>내가 생각한 V<sub>d</sub> (L)</label>
+      <input id="d2guess" type="number" placeholder="여기에 답을 적어요">
+      <button class="btn" onclick="checkCalc()">정답 확인</button>
+      <div class="out" id="d2out"></div>
+    </div>
+  </div>
+
+  <h2 class="sec"><span class="n">C</span> 생각 문제</h2>
+  <div class="card">
+    <p class="q" style="font-weight:800">같은 약을 같은 사람에게 주었는데, 친구 셋이 잰 V<sub>d</sub>가 24 L, 84 L, 91 L로 달랐어요. 누가 틀린 걸까요?</p>
+    <div class="choices" data-key="2">
+      <button onclick="pick(this,'bad')">① 91 L를 잰 친구가 계산을 틀렸다</button>
+      <button onclick="pick(this,'good')">② 아무도 안 틀렸다 — 잰 시점이 달라서 Vc·Vss·Vz가 다른 것</button>
+      <button onclick="pick(this,'meh')">③ 셋 다 다시 재야 한다</button>
+    </div>
+    <div class="verdict" id="v2"></div>
+  </div>
+</section>
+
+<!-- ================= TAB 3 : 실제문제 ================= -->
+<section class="tab" id="t3">
+  <div class="card">
+    <div class="talk right">
+      <svg class="ava" viewBox="0 0 54 54"><use href="#drd"/></svg>
+      <div class="bub"><div class="who">닥터 디</div>이제 진짜다! 우리가 직접 모은 <b>항체 약물 데이터 466개</b>를 가지고, "이걸 어떻게 정리할까"를 <b>너희 스스로</b> 결정해볼 거야.</div>
+    </div>
+  </div>
+
+  <h2 class="sec"><span class="n">1</span> 우리 데이터는 이렇게 생겼어요</h2>
+  <div class="card">
+    <p>총 <b>466개 기록</b> (유럽 EMA 261 + 미국 FDA 205), 항체 약물 <b>126종</b>. 그런데 V<sub>d</sub> 칸을 열어보니… 종류가 뒤섞여 있었어요 😵</p>
+    <figure>
+      <svg viewBox="0 0 640 230" width="100%" style="max-width:560px">
+        <!-- bar chart of Vd_kind counts -->
+        <g font-size="13" font-weight="700">
+          <!-- Vss 180 -->
+          <rect x="120" y="20" width="360" height="24" rx="6" fill="#ef6c9c"/>
+          <text x="10" y="37">Vss</text><text x="488" y="37">180</text>
+          <!-- Vd 84 -->
+          <rect x="120" y="52" width="168" height="24" rx="6" fill="#9aa7c4"/>
+          <text x="10" y="69">Vd</text><text x="296" y="69">84</text>
+          <!-- Vc 75 -->
+          <rect x="120" y="84" width="150" height="24" rx="6" fill="#7e57c2"/>
+          <text x="10" y="101">Vc</text><text x="278" y="101">75</text>
+          <!-- Vz 37 -->
+          <rect x="120" y="116" width="74" height="24" rx="6" fill="#15c39a"/>
+          <text x="10" y="133">Vz ✅</text><text x="202" y="133">37</text>
+          <!-- V_F/V_F apparent -->
+          <rect x="120" y="148" width="62" height="24" rx="6" fill="#ffb020"/>
+          <text x="10" y="165">V/F·V_F</text><text x="190" y="165">55</text>
+          <!-- 결측 -->
+          <rect x="120" y="180" width="70" height="24" rx="6" fill="#cdd6e6"/>
+          <text x="10" y="197">빈칸</text><text x="198" y="197">35</text>
+        </g>
+      </svg>
+      <figcaption>한 칸(Vd_L) 안에 6가지 종류가 섞여 있어요. 정답으로 권장되는 <b>Vz는 단 37개</b>뿐!</figcaption>
+    </figure>
+    <div class="note warnbox"><b>문제!</b> 이대로 컴퓨터에게 "V<sub>d</sub>를 맞춰봐"라고 가르치면, 어떤 줄은 작은 Vc를, 어떤 줄은 큰 Vz를 정답이라 가르치는 셈이라 <b>뒤죽박죽으로 배워요.</b></p></div>
+  </div>
+
+  <h2 class="sec"><span class="n">2</span> 진짜 약으로 0.71을 검증!</h2>
+  <div class="card">
+    <p>우리 데이터에서 <b>우스테키누맙(ustekinumab)</b>이라는 항체 약은 운 좋게 Vss와 Vz가 둘 다 있었어요. 1부에서 배운 "Vz가 더 크다"가 진짜인지 확인해볼까요?</p>
+    <table>
+      <tr><th>지표</th><th>우리 데이터 값</th><th>예상</th></tr>
+      <tr><td><span class="tag t-vss">Vss</span></td><td>약 4.5 L</td><td rowspan="2" style="vertical-align:middle">Vz가 더 커야 함 ✔️</td></tr>
+      <tr><td><span class="tag t-vz">Vz</span></td><td>약 4.9 L</td></tr>
+    </table>
+    <p>👉 정말로 <b>Vz(4.9) &gt; Vss(4.5)</b> 였어요! 비율은 Vss/Vz ≈ <b>0.92</b>.</p>
+    <div class="talk">
+      <svg class="ava" viewBox="0 0 54 54"><use href="#nari"/></svg>
+      <div class="bub"><div class="who">나리</div>어? 논문은 0.71인데 우리는 0.92예요. 우리가 틀린 거예요?</div>
+    </div>
+    <div class="talk right">
+      <svg class="ava" viewBox="0 0 54 54"><use href="#drd"/></svg>
+      <div class="bub"><div class="who">닥터 디</div>전혀! 아주 중요한 발견을 한 거야. 논문의 0.71은 <b>온갖 약을 평균</b>낸 값이고, <b>항체 약물</b>은 주로 혈액 근처에만 머물러서 Vss와 Vz가 비슷해(=비율이 1에 가까움). 그러니 <span class="hl">"0.71을 그대로 곱해서 변환하면 위험하다"</span>는 걸 너희가 데이터로 증명한 거지! 👏</div>
+    </div>
+  </div>
+
+  <h2 class="sec"><span class="n">3</span> 스스로 결정하기 🧭</h2>
+  <div class="card">
+    <p>이제 진짜 결정의 시간! 정답이 딱 하나는 아니에요. 이유를 생각하며 골라보세요.</p>
+
+    <div class="scenario">
+      <p class="q" style="font-weight:800">결정 ①: 뒤섞인 V<sub>d</sub> 칸, 어떻게 할까?</p>
+      <div class="choices">
+        <button onclick="pick(this,'meh')">전부 그냥 한 칸에 두고 컴퓨터에게 맡긴다</button>
+        <button onclick="pick(this,'good')">종류(Vd_kind)로 나누고, Vc는 빼고, 기준을 정한다</button>
+        <button onclick="pick(this,'bad')">Vz 37개만 남기고 나머지 다 버린다</button>
+      </div>
+      <div class="verdict" id="s1"></div>
+    </div>
+
+    <div class="scenario">
+      <p class="q" style="font-weight:800">결정 ②: Vss(180개)를 Vz로 바꿔서 합칠까?</p>
+      <div class="choices">
+        <button onclick="pick(this,'bad')">논문의 0.71을 전부 곱해서 바로 합친다</button>
+        <button onclick="pick(this,'good')">우리 데이터(0.92)처럼 약 종류마다 다르니, 변환은 신중히 — 종류를 표시(feature)해 따로 다룬다</button>
+        <button onclick="pick(this,'meh')">Vss가 제일 많으니 Vss를 기준으로 삼는다</button>
+      </div>
+      <div class="verdict" id="s2"></div>
+    </div>
+
+    <div class="scenario">
+      <p class="q" style="font-weight:800">결정 ③: CL/F 같은 "겉보기 값"은?</p>
+      <div class="choices">
+        <button onclick="pick(this,'good')">절대값(CL)과 겉보기값(CL/F)은 의미가 다르니 깃발(플래그)로 표시해 섞지 않는다</button>
+        <button onclick="pick(this,'bad')">숫자니까 그냥 같이 넣는다</button>
+        <button onclick="pick(this,'meh')">CL/F는 전부 버린다</button>
+      </div>
+      <div class="verdict" id="s3"></div>
+    </div>
+  </div>
+
+  <h2 class="sec"><span class="n">4</span> 결정 지도 (요약)</h2>
+  <div class="card">
+    <figure>
+      <svg viewBox="0 0 640 360" width="100%" style="max-width:620px" font-size="13" font-weight="700">
+        <rect x="220" y="10" width="200" height="44" rx="12" fill="#3f7cff"/>
+        <text x="320" y="37" fill="#fff" text-anchor="middle">V_d 값을 발견했다</text>
+        <line x1="320" y1="54" x2="320" y2="80" stroke="#9aa7c4" stroke-width="2"/>
+        <rect x="210" y="80" width="220" height="44" rx="12" fill="#fff" stroke="#7e57c2" stroke-width="2"/>
+        <text x="320" y="107" fill="#7e57c2" text-anchor="middle">종류가 Vc 인가?</text>
+        <!-- yes left -->
+        <line x1="210" y1="102" x2="110" y2="150" stroke="#9aa7c4" stroke-width="2"/>
+        <text x="150" y="135" fill="#ef6c9c">예</text>
+        <rect x="20" y="150" width="180" height="44" rx="12" fill="#ffeee9" stroke="#ff7a59" stroke-width="2"/>
+        <text x="110" y="177" fill="#c0392b" text-anchor="middle">분포 타깃에서 제외</text>
+        <!-- no down -->
+        <line x1="320" y1="124" x2="320" y2="150" stroke="#9aa7c4" stroke-width="2"/>
+        <text x="332" y="142" fill="#15c39a">아니오</text>
+        <rect x="210" y="150" width="220" height="44" rx="12" fill="#fff" stroke="#ffb020" stroke-width="2"/>
+        <text x="320" y="177" fill="#b9821a" text-anchor="middle">겉보기값(/F) 인가?</text>
+        <line x1="430" y1="172" x2="540" y2="210" stroke="#9aa7c4" stroke-width="2"/>
+        <text x="500" y="195" fill="#ef6c9c">예</text>
+        <rect x="450" y="210" width="180" height="44" rx="12" fill="#fff7e6" stroke="#ffb020" stroke-width="2"/>
+        <text x="540" y="237" fill="#b9821a" text-anchor="middle">플래그 표시·분리</text>
+        <line x1="320" y1="194" x2="320" y2="220" stroke="#9aa7c4" stroke-width="2"/>
+        <text x="332" y="212" fill="#15c39a">아니오</text>
+        <rect x="200" y="220" width="240" height="44" rx="12" fill="#fff" stroke="#3f7cff" stroke-width="2"/>
+        <text x="320" y="247" fill="#3f7cff" text-anchor="middle">Vz · Vss · Vd 종류 표시</text>
+        <line x1="320" y1="264" x2="320" y2="290" stroke="#9aa7c4" stroke-width="2"/>
+        <rect x="190" y="290" width="260" height="50" rx="12" fill="#15c39a"/>
+        <text x="320" y="312" fill="#fff" text-anchor="middle">기준은 Vz(=area)</text>
+        <text x="320" y="330" fill="#eafff8" text-anchor="middle" font-size="11">Vss는 변환 말고 종류로 구분</text>
+      </svg>
+      <figcaption>막힐 때 돌아오는 "결정 지도". 정답을 외우는 게 아니라, <b>이유를 따라 스스로 고르는</b> 연습이에요.</figcaption>
+    </figure>
+    <div class="key" style="text-align:center"><b>오늘의 진짜 교훈</b><br>좋은 데이터 과학자는 숫자를 모으기 <i>전에</i>, <span class="hl">"이 숫자가 같은 뜻인가?"</span>를 먼저 묻습니다. 🧠</div>
+  </div>
+
+  <div class="card" style="text-align:center;background:linear-gradient(135deg,#e6fbf4,#eef4ff)">
+    <p class="big">🎓 다 배웠어요!</p>
+    <p>이제 V<sub>d</sub>의 세 친구를 구별하고, 우리 데이터를 스스로 정리할 수 있어요.</p>
+    <button class="btn ghost" onclick="go('t1')">📖 처음부터 다시 보기</button>
+  </div>
+</section>
+
+<div class="footer">
+  <p>임상약동학 첫걸음 교재 · ABSwitch 프로젝트 · 학습용으로 자유롭게 사용하세요.</p>
+  <p>이론적 근거: Greenblatt DJG et al. <i>Volume of distribution in pharmacokinetics and clinical medicine: a critical update</i> (2026).</p>
+</div>
+</div>
+
+<script>
+/* ---- tabs ---- */
+function go(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.id===id));
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>go(b.dataset.tab));
+
+/* ---- calculator ---- */
+function calcVd(){
+  const d=+document.getElementById('dose').value, c=+document.getElementById('conc').value;
+  const o=document.getElementById('vdout');
+  if(!c){o.textContent='농도는 0이 될 수 없어요 🙅';o.style.color='var(--accent)';return;}
+  const v=(d/c);
+  o.style.color='var(--brand)';
+  o.innerHTML='➡️ V<sub>d</sub> = '+d+' ÷ '+c+' = <span class="big">'+(+v.toFixed(2))+' L</span>'+
+   (v>50?' &nbsp;(우와, 엄청 넓게 퍼졌네요!)':v<5?' &nbsp;(혈액에 꽁꽁 머물러 있어요)':'');
+}
+
+/* ---- calc check (part 2) ---- */
+function checkCalc(){
+  const d=+document.getElementById('d2dose').value, c=+document.getElementById('d2conc').value;
+  const g=+document.getElementById('d2guess').value, o=document.getElementById('d2out');
+  if(!c){o.textContent='농도는 0이 될 수 없어요';o.style.color='var(--accent)';return;}
+  const ans=d/c;
+  if(Math.abs(g-ans)<0.05){o.style.color='var(--brand2)';o.innerHTML='🎉 정답! V<sub>d</sub> = '+(+ans.toFixed(2))+' L';}
+  else{o.style.color='var(--accent)';o.innerHTML='아쉬워요. 정답은 '+d+' ÷ '+c+' = <b>'+(+ans.toFixed(2))+' L</b> 였어요. 다시 해볼까요?';}
+}
+
+/* ---- quiz ---- */
+const QUIZ=[
+ {q:'분포용적(V_d)은 무엇일까요?',
+  o:['우리 몸의 진짜 부피','농도로 거꾸로 계산한 가상의 부피','약의 무게'],a:1,
+  fb:'V_d는 실제 부피가 아니라 "농도로 보니 이만큼 퍼진 것 같다"는 상상 속 숫자예요.'},
+ {q:'혈액 농도가 아주 낮게 나왔어요. 약은?',
+  o:['혈액에 그대로 있다 (V_d 작음)','넓게 퍼졌다 (V_d 큼)','사라졌다'],a:1,
+  fb:'농도가 옅다 = 약이 조직으로 많이 퍼졌다 = V_d가 큼!'},
+ {q:'세 친구의 크기 순서로 맞는 것은?',
+  o:['Vz < Vss < Vc','Vc < Vss < Vz','셋 다 같다'],a:1,
+  fb:'시간이 갈수록 넓게 퍼지므로 Vc(직후) < Vss(중간) < Vz(다 퍼진 뒤).'},
+ {q:'"분포 정도"가 아니라서 빼야 하는 친구는?',
+  o:['Vc (중심구획)','Vz','Vss'],a:0,
+  fb:'Vc는 약이 아직 안 퍼진 출발점(초기 희석 공간)이라 분포가 아니에요.'},
+ {q:'논문이 추천하는, 실제 데이터만으로 구해지는 지표는?',
+  o:['Vc','Vss','Vz (=V_d area)'],a:2,
+  fb:'Vz는 추측 없이 관찰 데이터만으로 나오고, 답이 하나로 정해져요.'}
+];
+const qbox=document.getElementById('quiz');
+QUIZ.forEach((item,i)=>{
+  let h='<div class="q">Q'+(i+1)+'. '+item.q+'</div>';
+  item.o.forEach((op,j)=>{
+    h+='<label class="opt" data-q="'+i+'" data-j="'+j+'">'+
+       '<input type="radio" name="q'+i+'" value="'+j+'">'+op+
+       '<div class="fb">'+(j===item.a?'⭕ ':'❌ ')+item.fb+'</div></label>';
+  });
+  qbox.innerHTML+=h;
+});
+qbox.addEventListener('change',e=>{
+  const lab=e.target.closest('.opt'); if(!lab)return;
+  const i=+lab.dataset.q, j=+lab.dataset.j, a=QUIZ[i].a;
+  qbox.querySelectorAll('.opt[data-q="'+i+'"]').forEach(o=>o.classList.remove('correct','wrong','show'));
+  lab.classList.add('show', j===a?'correct':'wrong');
+  if(j!==a) qbox.querySelector('.opt[data-q="'+i+'"][data-j="'+a+'"]').classList.add('correct');
+});
+function grade(){
+  let s=0;
+  QUIZ.forEach((it,i)=>{const sel=qbox.querySelector('input[name="q'+i+'"]:checked');if(sel&&+sel.value===it.a)s++;});
+  const el=document.getElementById('score');
+  el.textContent='⭐ '+s+' / '+QUIZ.length+' 점!'+(s===QUIZ.length?' 완벽해요! 🏆':s>=3?' 잘했어요! 👍':' 1부를 다시 읽어볼까요? 📖');
+}
+
+/* ---- decision picks ---- */
+const MSG={
+ good:['🎉 훌륭한 결정!','정답에 가까운 선택이에요.'],
+ meh:['🤔 음, 한 번 더 생각해볼까요?','틀린 건 아니지만 더 좋은 방법이 있어요.'],
+ bad:['😅 다시 생각해봐요.','이렇게 하면 문제가 생길 수 있어요.']
+};
+const EXPL={
+ 'v2':{good:'맞아요! 잰 시점이 달라서 생긴 세 친구(Vc·Vss·Vz)일 뿐, 누구도 틀리지 않았어요.',
+      meh:'다시 잴 필요는 없어요. 값이 다른 건 실수가 아니라 "언제 쟀나"가 다르기 때문이에요.',
+      bad:'91 L(Vz)도 정확해요. 큰 값이 틀린 게 아니라 다 퍼진 뒤의 부피랍니다.'},
+ 's1':{good:'바로 그거예요! 종류로 나누고 Vc는 빼고 기준을 정해야 컴퓨터가 헷갈리지 않아요.',
+       meh:'한 칸에 두면 작은 Vc와 큰 Vz를 동시에 정답이라 가르쳐서 뒤죽박죽 배워요.',
+       bad:'다 버리면 아까워요! 종류를 표시(feature)하면 Vss·Vd도 쓸 수 있어요.'},
+ 's2':{good:'정확해요! 우리 데이터(0.92)처럼 약마다 비율이 달라서, 무턱대고 0.71을 곱하면 위험해요.',
+       meh:'Vss가 많다고 기준이 되는 건 아니에요. 이론상 기준은 Vz랍니다.',
+       bad:'0.71은 평균일 뿐! 항체 약은 1에 가까워서 그대로 곱하면 틀려요.'},
+ 's3':{good:'맞아요! CL/F는 생체이용률로 나뉜 겉보기값이라 절대값과 섞으면 안 돼요.',
+       meh:'버리기엔 아까워요. 깃발로 표시해 따로 다루면 활용할 수 있어요.',
+       bad:'겉보기값과 절대값을 섞으면 컴퓨터가 잘못 배워요.'}
+};
+function pick(btn,kind){
+  const box=btn.closest('.scenario,.card');
+  const key=btn.closest('.choices').dataset.key || box.querySelector('.verdict').id;
+  const v=box.querySelector('.verdict');
+  v.className='verdict '+kind;
+  const k=v.id;
+  v.innerHTML='<b>'+MSG[kind][0]+'</b><br>'+((EXPL[k]&&EXPL[k][kind])||MSG[kind][1]);
+  box.querySelectorAll('.choices button').forEach(b=>b.style.opacity=.6);
+  btn.style.opacity=1; btn.style.borderColor='currentColor';
+}
+</script>
+</body>
+</html>
