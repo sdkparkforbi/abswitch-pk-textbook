@@ -344,6 +344,15 @@
     </div>
     <div class="verdict" id="v2"></div>
   </div>
+
+  <div class="card" id="t2gate" style="text-align:center;background:linear-gradient(135deg,#fff7e6,#eef4ff)">
+    <p class="big" id="t2timer">⏳ 2분 동안 문제를 풀어볼 시간! · 남은 시간 2:00</p>
+    <p style="color:var(--muted)">충분히 풀고 나면, 아래에 <b>3부로 가는 링크</b>가 열려요. (이 탭에 머무는 시간만 계산돼요)</p>
+    <div id="t2unlock" style="display:none">
+      <p class="big" style="color:var(--brand2)">🎉 준비 완료!</p>
+      <button class="btn" onclick="go('t3')">🔬 3부 · 실제문제로 가기</button>
+    </div>
+  </div>
 </section>
 
 <!-- ================= TAB 3 : 실제문제 ================= -->
@@ -492,6 +501,22 @@
 </div>
 
 <script>
+/* ---- 2부 2분 타이머 → 3부 링크 열기 ---- */
+let t2sec=0; const T2NEED=120;
+setInterval(function(){
+  if(t2sec>=T2NEED) return;
+  if(!document.getElementById('t2').classList.contains('active')) return;
+  t2sec++;
+  const r=T2NEED-t2sec, m=Math.floor(r/60), s=String(r%60).padStart(2,'0');
+  const tm=document.getElementById('t2timer');
+  if(t2sec<T2NEED){
+    tm.textContent='⏳ 2분 동안 문제를 풀어볼 시간! · 남은 시간 '+m+':'+s;
+  }else{
+    tm.textContent='✅ 2분 완료! 잘 풀었어요. 이제 3부로 가볼까요?';
+    document.getElementById('t2unlock').style.display='block';
+  }
+},1000);
+
 /* ---- tabs ---- */
 function go(id){
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.id===id));
